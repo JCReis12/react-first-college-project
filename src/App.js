@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
   const [items, setItems] = useState(() => {
@@ -6,7 +7,7 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -21,6 +22,10 @@ function App() {
       JSON.stringify(items)
     );
   }, [items]);
+
+  useEffect(() => {
+    document.body.dataset.theme = darkMode ? "dark" : "light";
+  }, [darkMode]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -701,12 +706,13 @@ function App() {
 
       `}</style>
 
-      <main className="app">
+      <main className={`app ${darkMode ? "theme-dark" : "theme-light"}`}>
 
         <button
           className="theme-button"
           onClick={() => setDarkMode(!darkMode)}
           title="Alterar tema"
+          aria-label={darkMode ? "Ativar tema claro" : "Ativar tema escuro"}
         >
           {darkMode ? "☀️" : "🌙"}
         </button>
@@ -721,7 +727,7 @@ function App() {
 
               <div className="logo">
 
-                <div className="logo-icon">
+                <div className="logo-icon" aria-hidden="true">
                   🛒
                 </div>
 
@@ -909,6 +915,7 @@ function App() {
                 <button
                   className="clear-button"
                   onClick={clearList}
+                  type="button"
                 >
                   Limpar lista
                 </button>
@@ -953,6 +960,8 @@ function App() {
                     onClick={() =>
                       toggleBought(item.id)
                     }
+                    type="button"
+                    aria-label={`${item.bought ? "Desmarcar" : "Marcar"} ${item.name} como comprado`}
                   >
                     {item.bought ? "✓" : ""}
                   </button>
@@ -1001,6 +1010,7 @@ function App() {
                     onClick={() =>
                       removeItem(item.id)
                     }
+                    type="button"
                     title="Remover produto"
                   >
                     ×
